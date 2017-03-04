@@ -11,9 +11,11 @@ namespace Notes
             listView.ItemsSource = temp;
         }
 
-        private void ListItemSelected(object sender, SelectedItemChangedEventArgs e)
+        private async void ListItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine($"{e.SelectedItem} was selected.");
+            await Navigation.PushAsync(new Note());
+            //listView.SelectedItem = null;
         }
     }
 }
