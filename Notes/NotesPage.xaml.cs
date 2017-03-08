@@ -1,6 +1,6 @@
 ﻿using Xamarin.Forms;
 using System;
-//using PCLStorage;
+using PCLStorage;
 
 namespace Notes
 {
@@ -18,13 +18,21 @@ namespace Notes
         public NotesPage()
         {
             InitializeComponent();
-
-            //var folder = FileSystem.Current.LocalStorage;
-            //var files = folder.GetFilesAsync();
+            GetFiles();
 
             NoteData[] temp = { new NoteData("test 1"), new NoteData("note 2") };
             listView.ItemsSource = temp;
         }
+
+        private async void GetFiles()
+        {
+			var folder = FileSystem.Current.LocalStorage;
+			var files = await folder.GetFilesAsync().ConfigureAwait(false);
+            foreach (var file in files)
+            {
+                System.Diagnostics.Debug.WriteLine(file);
+            }
+		}
 
         private async void ListItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
@@ -33,7 +41,12 @@ namespace Notes
             //listView.SelectedItem = null;
         }
 
-        public void OnDelete(object sender, EventArgs e)
+        private async void OnNew(object sender, EventArgs e)
+        {
+			await Navigation.PushAsync(new Note());
+        }
+
+        private void OnDelete(object sender, EventArgs e)
         {
             var menuItem = ((MenuItem)sender);
             DisplayAlert("Delete Context Action", menuItem.CommandParameter + " delete context action", "OK");
