@@ -4,11 +4,13 @@ namespace Notes
 {
     public partial class App : Application
     {
+        static public NotesModel notesModel = new NotesModel();
+
         public App()
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage(new NotesPage());
+            MainPage = new NavigationPage(new NoteListPage());
         }
 
         protected override void OnStart()

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Notes.NoteListPage" Title="Notes">
+	<ContentPage.ToolbarItems>
+		<ToolbarItem Name="New" Activated="OnNew" Order="Primary"/>
+	</ContentPage.ToolbarItems>
+	<ContentPage.Content>
+		<ListView x:Name="listView" ItemSelected="ListItemSelected" ItemsSource="{Binding}" HasUnevenRows="true">
+			<ListView.ItemTemplate>
+				<DataTemplate>
+					<ViewCell>
+						<ViewCell.ContextActions>
+							<MenuItem Clicked="OnDelete" CommandParameter="{Binding .}" Text="Delete"/>
+						</ViewCell.ContextActions>
+						<StackLayout>
+							<Label Text="{Binding Preview}"/>
+							<Label Text="{Binding Timestamp, StringFormat='{0:dd.MM.yyyy}'}" TextColor="Gray"/>
+						</StackLayout>
+					</ViewCell>
+				</DataTemplate>
+			</ListView.ItemTemplate>
+		</ListView>
+	</ContentPage.Content>
+</ContentPage>
