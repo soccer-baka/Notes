@@ -28,19 +28,8 @@ namespace Notes
                 var content = "";
                 using (var rs = new System.IO.StringReader(text))
                 {
-                    var line = 0;
-                    while (rs.Peek() > -1)
-                    {
-                        if (line == 0)
-                        {
-                            timestamp = DateTime.Parse(rs.ReadLine());
-                        }
-                        else
-                        {
-                            content += rs.ReadLine() + Environment.NewLine;
-                        }
-                        line++;
-                    }
+                    timestamp = DateTime.Parse(rs.ReadLine());
+                    content = rs.ReadToEnd();
                 }
                 return new NoteData(file.Name, content, timestamp);
             }));
@@ -119,7 +108,12 @@ namespace Notes
         {
             get
             {
-                return content.Length < 10 ? content : content.Substring(0, 10);
+                string preview;
+				using (var rs = new System.IO.StringReader(content))
+				{
+					preview = rs.ReadLine();
+				}
+				return preview.Length < 24 ? preview : preview.Substring(0, 24) + "...";
             }
         }
         public NoteData(string name, string _content) : this(name, _content, DateTime.Now) { }

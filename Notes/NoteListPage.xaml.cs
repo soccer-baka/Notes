@@ -13,10 +13,10 @@ namespace Notes
             listView.BindingContext = App.notesModel.notes;
         }
 
-        private async void ListItemSelected(object sender, SelectedItemChangedEventArgs e)
+        private async void ListItemTapped(object sender, ItemTappedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine($"{e.SelectedItem} was selected.");
-            await Navigation.PushAsync(new NotePage((NoteData)e.SelectedItem));
+            System.Diagnostics.Debug.WriteLine($"{e.Item} was selected.");
+            await Navigation.PushAsync(new NotePage((NoteData)e.Item));
             //listView.SelectedItem = null;
         }
 
@@ -28,8 +28,9 @@ namespace Notes
         private async void OnDelete(object sender, EventArgs e)
         {
             var menuItem = ((MenuItem)sender);
-            App.notesModel.notes.Remove((NoteData)menuItem.CommandParameter);
-			await App.notesModel.Delete((NoteData)menuItem.CommandParameter);
+            NoteData note = (NoteData)menuItem.CommandParameter;
+            App.notesModel.notes.Remove(note);
+			await App.notesModel.Delete(note);
             //DisplayAlert("Delete Context Action", menuItem.CommandParameter + " delete context action", "OK");
         }
 

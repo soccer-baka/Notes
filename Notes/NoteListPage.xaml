@@ -4,7 +4,7 @@
 		<ToolbarItem Name="New" Activated="OnNew" Order="Primary"/>
 	</ContentPage.ToolbarItems>
 	<ContentPage.Content>
-		<ListView x:Name="listView" ItemSelected="ListItemSelected" ItemsSource="{Binding}" HasUnevenRows="true">
+		<ListView x:Name="listView" ItemTapped="ListItemTapped" ItemsSource="{Binding}" HasUnevenRows="true">
 			<ListView.ItemTemplate>
 				<DataTemplate>
 					<ViewCell>
