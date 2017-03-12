@@ -17,15 +17,20 @@ namespace Notes
             originalContent = editorNote.Text;
         }
 
-        protected override void OnDisappearing()
+        protected override async void OnDisappearing()
         {
-            if (currentNote == null)
+            if (editorNote.Text != originalContent)
             {
-                App.notesModel.notes.Add(new NoteData("new", editorNote.Text));
-            }
-            else if (editorNote.Text != originalContent)
-            {
-                currentNote.Content = editorNote.Text;
+                if (currentNote == null)
+                {
+                    currentNote = new NoteData(App.notesModel.GenerateFileName(), editorNote.Text);
+                    App.notesModel.notes.Add(currentNote);
+                }
+                else
+                {
+                    currentNote.Content = editorNote.Text;
+                }
+                await App.notesModel.Write(currentNote);
             }
         }
     }

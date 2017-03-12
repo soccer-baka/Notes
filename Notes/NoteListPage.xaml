@@ -13,7 +13,7 @@
 						</ViewCell.ContextActions>
 						<StackLayout>
 							<Label Text="{Binding Preview}"/>
-							<Label Text="{Binding Timestamp, StringFormat='{0:dd.MM.yyyy}'}" TextColor="Gray"/>
+							<Label Text="{Binding Timestamp, StringFormat='{0:yyyy/MM/dd HH:mm:ss}'}" TextColor="Gray"/>
 						</StackLayout>
 					</ViewCell>
 				</DataTemplate>

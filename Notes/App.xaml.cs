@@ -13,19 +13,19 @@ namespace Notes
             MainPage = new NavigationPage(new NoteListPage());
         }
 
-        protected override void OnStart()
+        protected override async void OnStart()
         {
-            // Handle when your app starts
+            await notesModel.ReadAll();
         }
 
-        protected override void OnSleep()
-        {
-            // Handle when your app sleeps
-        }
+        //protected override async void OnSleep()
+        //{
+            //await notesModel.WriteAll();
+        //}
 
-        protected override void OnResume()
-        {
+        //protected override void OnResume()
+        //{
             // Handle when your app resumes
-        }
+        //}
     }
 }

@@ -15,18 +15,34 @@ namespace Notes
         public NotesModel()
         {
             notes = new ObservableCollection<NoteData>();
-            //ReadAll();
-            MakeTestData();
         }
 
-        public async void ReadAll()
+        public async Task ReadAll()
         {
             var folder = FileSystem.Current.LocalStorage;
             var files = await folder.GetFilesAsync();
             NoteData[] noteArray = await Task.WhenAll(files.Select(async file =>
             {
-                var content = await file.ReadAllTextAsync();
-                return new NoteData(file.Name, content);
+                var text = await file.ReadAllTextAsync();
+                var timestamp = DateTime.Now;
+                var content = "";
+                using (var rs = new System.IO.StringReader(text))
+                {
+                    var line = 0;
+                    while (rs.Peek() > -1)
+                    {
+                        if (line == 0)
+                        {
+                            timestamp = DateTime.Parse(rs.ReadLine());
+                        }
+                        else
+                        {
+                            content += rs.ReadLine() + Environment.NewLine;
+                        }
+                        line++;
+                    }
+                }
+                return new NoteData(file.Name, content, timestamp);
             }));
             foreach (var note in noteArray)
             {
@@ -34,33 +50,52 @@ namespace Notes
             }
         }
 
-        public async void Write(NoteData note)
+        //public async Task WriteAll()
+        //{
+        //}
+
+        public async Task Write(NoteData note)
         {
-			var folder = FileSystem.Current.LocalStorage;
-			var file = await folder.CreateFileAsync(note.Filename, CreationCollisionOption.ReplaceExisting);
-            await file.WriteAllTextAsync(note.Content);
+            var folder = FileSystem.Current.LocalStorage;
+            var file = await folder.CreateFileAsync(note.Filename, CreationCollisionOption.ReplaceExisting);
+            var text = note.Timestamp.ToString() + Environment.NewLine + note.Content;
+            await file.WriteAllTextAsync(text);
         }
 
-        public async void Delete(NoteData note)
+        public async Task Delete(NoteData note)
         {
-			var folder = FileSystem.Current.LocalStorage;
-			var file = await folder.GetFileAsync(note.Filename);
+            var folder = FileSystem.Current.LocalStorage;
+            var file = await folder.GetFileAsync(note.Filename);
             await file.DeleteAsync();
         }
 
-        private void MakeTestData()
+        public string GenerateFileName()
         {
-            for (int i = 0; i < 4; i++)
+            var filenameList = from n in notes
+                               orderby n.Filename
+                               select n.Filename;
+            string name = "note000.txt";
+            int number = 0;
+            foreach (var filename in filenameList)
             {
-                notes.Add(new NoteData($"note {i}", $"comment {i}", DateTime.Now));
+                if (name != filename)
+                {
+                    return name;
+                }
+                else
+                {
+                    number++;
+                    name = String.Format("note{0:D3}.txt", number);
+                }
             }
+            return name;
         }
     }
 
     public class NoteData : INotifyPropertyChanged
     {
 
-		public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public string Filename { get; private set; }
         public DateTime Timestamp { get; private set; }
@@ -75,9 +110,9 @@ namespace Notes
             {
                 content = value;
                 Timestamp = DateTime.Now;
-				OnPropertyChanged("Content");
+                OnPropertyChanged("Content");
                 OnPropertyChanged("Preview");
-				OnPropertyChanged("Timestamp");
+                OnPropertyChanged("Timestamp");
             }
         }
         public string Preview
@@ -95,14 +130,14 @@ namespace Notes
             Timestamp = time;
         }
 
-		protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-		{
-			var eventHandler = this.PropertyChanged;
-			if (eventHandler != null)
-			{
-				eventHandler(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            var eventHandler = this.PropertyChanged;
+            if (eventHandler != null)
+            {
+                eventHandler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
 
-	}
+    }
 }
