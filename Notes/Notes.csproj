@@ -41,13 +41,14 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="NotesModel.cs" />
+    <Compile Include="NotesViewModel.cs" />
     <Compile Include="NoteListPage.xaml.cs">
       <DependentUpon>NoteListPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="NotePage.xaml.cs">
       <DependentUpon>NotePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="NoteData.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Xamarin.Forms.Core">

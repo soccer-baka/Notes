@@ -2,20 +2,29 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using System.Collections.Generic;
 using PCLStorage;
 
 namespace Notes
 {
-    public class NotesModel
+    public class NotesViewModel
     {
-        public ObservableCollection<NoteData> notes { get; private set; }
+        public ObservableCollection<NoteData> Notes { get; } = new ObservableCollection<NoteData>();
 
-        public NotesModel()
+        public NotesViewModel()
         {
-            notes = new ObservableCollection<NoteData>();
         }
+
+        private void Sort()
+        {
+			List<NoteData> tmpList = new List<NoteData>(Notes);
+			var query = tmpList.OrderByDescending(n => n.Timestamp);
+			Notes.Clear();
+			foreach (var note in query)
+			{
+				Notes.Add(note);
+			}
+		}
 
         public async Task ReadAll()
         {
@@ -33,9 +42,11 @@ namespace Notes
                 }
                 return new NoteData(file.Name, content, timestamp);
             }));
-            foreach (var note in noteArray)
+            Notes.Clear();
+			var query = noteArray.OrderByDescending(n => n.Timestamp);
+            foreach (var note in query)
             {
-                notes.Add(note);
+                Notes.Add(note);
             }
         }
 
@@ -49,6 +60,7 @@ namespace Notes
             var file = await folder.CreateFileAsync(note.Filename, CreationCollisionOption.ReplaceExisting);
             var text = note.Timestamp.ToString() + Environment.NewLine + note.Content;
             await file.WriteAllTextAsync(text);
+            Sort();
         }
 
         public async Task Delete(NoteData note)
@@ -60,7 +72,7 @@ namespace Notes
 
         public string GenerateFileName()
         {
-            var filenameList = from n in notes
+            var filenameList = from n in Notes
                                orderby n.Filename
                                select n.Filename;
             string name = "note000.txt";
@@ -81,57 +93,4 @@ namespace Notes
         }
     }
 
-    public class NoteData : INotifyPropertyChanged
-    {
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public string Filename { get; private set; }
-        public DateTime Timestamp { get; private set; }
-        private string content;
-        public string Content
-        {
-            get
-            {
-                return content;
-            }
-            set
-            {
-                content = value;
-                Timestamp = DateTime.Now;
-                OnPropertyChanged("Content");
-                OnPropertyChanged("Preview");
-                OnPropertyChanged("Timestamp");
-            }
-        }
-        public string Preview
-        {
-            get
-            {
-                string preview;
-				using (var rs = new System.IO.StringReader(content))
-				{
-					preview = rs.ReadLine();
-				}
-				return preview.Length < 24 ? preview : preview.Substring(0, 24) + "...";
-            }
-        }
-        public NoteData(string name, string _content) : this(name, _content, DateTime.Now) { }
-        public NoteData(string name, string _content, DateTime time)
-        {
-            Filename = name;
-            content = _content;
-            Timestamp = time;
-        }
-
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            var eventHandler = this.PropertyChanged;
-            if (eventHandler != null)
-            {
-                eventHandler(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
-    }
 }

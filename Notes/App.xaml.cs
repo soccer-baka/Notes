@@ -4,7 +4,7 @@ namespace Notes
 {
     public partial class App : Application
     {
-        static public NotesModel notesModel = new NotesModel();
+        static public NotesViewModel notesViewModel = new NotesViewModel();
 
         public App()
         {
@@ -15,7 +15,7 @@ namespace Notes
 
         protected override async void OnStart()
         {
-            await notesModel.ReadAll();
+            await notesViewModel.ReadAll();
         }
 
         //protected override async void OnSleep()

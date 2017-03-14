@@ -10,7 +10,7 @@ namespace Notes
         public NoteListPage()
         {
             InitializeComponent();
-            listView.BindingContext = App.notesModel.notes;
+            listView.BindingContext = App.notesViewModel.Notes;
         }
 
         private async void ListItemTapped(object sender, ItemTappedEventArgs e)
@@ -29,8 +29,8 @@ namespace Notes
         {
             var menuItem = ((MenuItem)sender);
             NoteData note = (NoteData)menuItem.CommandParameter;
-            App.notesModel.notes.Remove(note);
-			await App.notesModel.Delete(note);
+            App.notesViewModel.Notes.Remove(note);
+			await App.notesViewModel.Delete(note);
             //DisplayAlert("Delete Context Action", menuItem.CommandParameter + " delete context action", "OK");
         }
 

@@ -23,14 +23,14 @@ namespace Notes
             {
                 if (currentNote == null)
                 {
-                    currentNote = new NoteData(App.notesModel.GenerateFileName(), editorNote.Text);
-                    App.notesModel.notes.Add(currentNote);
+                    currentNote = new NoteData(App.notesViewModel.GenerateFileName(), editorNote.Text);
+                    App.notesViewModel.Notes.Add(currentNote);
                 }
                 else
                 {
                     currentNote.Content = editorNote.Text;
                 }
-                await App.notesModel.Write(currentNote);
+                await App.notesViewModel.Write(currentNote);
             }
         }
     }
