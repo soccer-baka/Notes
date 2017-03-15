@@ -35,10 +35,10 @@ namespace Notes
                 var text = await file.ReadAllTextAsync();
                 var timestamp = DateTime.Now;
                 var content = "";
-                using (var rs = new System.IO.StringReader(text))
+                using (var stringReader = new System.IO.StringReader(text))
                 {
-                    timestamp = DateTime.Parse(rs.ReadLine());
-                    content = rs.ReadToEnd();
+                    timestamp = DateTime.Parse(stringReader.ReadLine());
+                    content = stringReader.ReadToEnd();
                 }
                 return new NoteData(file.Name, content, timestamp);
             }));
@@ -65,6 +65,8 @@ namespace Notes
 
         public async Task Delete(NoteData note)
         {
+            Notes.Remove(note);
+
             var folder = FileSystem.Current.LocalStorage;
             var file = await folder.GetFileAsync(note.Filename);
             await file.DeleteAsync();

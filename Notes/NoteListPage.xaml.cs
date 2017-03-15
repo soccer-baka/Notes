@@ -29,7 +29,6 @@ namespace Notes
         {
             var menuItem = ((MenuItem)sender);
             NoteData note = (NoteData)menuItem.CommandParameter;
-            App.notesViewModel.Notes.Remove(note);
 			await App.notesViewModel.Delete(note);
             //DisplayAlert("Delete Context Action", menuItem.CommandParameter + " delete context action", "OK");
         }
