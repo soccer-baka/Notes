@@ -18,10 +18,10 @@ namespace Notes
             await notesViewModel.ReadAll();
         }
 
-        //protected override async void OnSleep()
-        //{
-            //await notesModel.WriteAll();
-        //}
+        protected override async void OnSleep()
+        {
+            await notesViewModel.WriteAll();
+        }
 
         //protected override void OnResume()
         //{

@@ -50,16 +50,17 @@ namespace Notes
             }
         }
 
-        //public async Task WriteAll()
-        //{
-        //}
+        public async Task WriteAll()
+        {
+            await Task.WhenAll(Notes.Where(note => note.IsModified).Select(async note =>
+            {
+                await note.Write();
+            }));
+        }
 
         public async Task Write(NoteData note)
         {
-            var folder = FileSystem.Current.LocalStorage;
-            var file = await folder.CreateFileAsync(note.Filename, CreationCollisionOption.ReplaceExisting);
-            var text = note.Timestamp.ToString() + Environment.NewLine + note.Content;
-            await file.WriteAllTextAsync(text);
+            await note.Write();
             Sort();
         }
 
