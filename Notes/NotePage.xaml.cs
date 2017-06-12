@@ -8,7 +8,7 @@ namespace Notes
     {
         private NoteData currentNote;
 
-        public NotePage(NoteData note=null)
+        public NotePage(NoteData note = null)
         {
             InitializeComponent();
             currentNote = note;
@@ -22,11 +22,11 @@ namespace Notes
 
         protected override async void OnDisappearing()
         {
-			if (currentNote.IsEmpty)
-			{
-				await App.notesViewModel.Delete(currentNote);
-			}
-			else if (currentNote.IsModified)
+            if (currentNote.IsEmpty)
+            {
+                await App.notesViewModel.Delete(currentNote);
+            }
+            else if (currentNote.IsModified)
             {
                 await App.notesViewModel.Write(currentNote);
             }
